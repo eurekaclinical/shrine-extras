@@ -8,7 +8,7 @@ Below the instructions are some extra tips we have found useful when deploying S
 
 These instructions assume you have already followed the automated install instructions on the SHRINE website and your user account on your SHRINE server has sudo access. `$SHRINE_HOME` is the path to your SHRINE installation, usually `/opt/shrine`. These instructions have been tested with SHRINE version 1.19.1 on Red Hat Enterprise Linux version 6.5.
 
-1. Copy the `common.rc` and `shrine.rc` files that the installer placed in your home directory to `$SHRINE_HOME`.
+1. Move the `common.rc` and `shrine.rc` files that the SHRINE installer placed in your home directory to `$SHRINE_HOME`.
 2. Copy the `runshrine` script to `$SHRINE_HOME`.
 3. Create a `shrine` user and `shrine` group on your server. The user account should be a service account with no home directory.
 4. Change the owner and group of your SHRINE installation to the shrine user and group: `sudo chown -R shrine:shrine $SHRINE_HOME`.
@@ -19,8 +19,12 @@ These instructions assume you have already followed the automated install instru
 
 ## Extra tips
 
-You likely will want your database management system to start automatically. For example, for MySQL installed using the default packages from CentOS or Red Hat, the command is `sudo chkconfig --level 2345 mysqld on`.
+The SHRINE installation installs all of the default webapps that come with tomcat. These are not needed and can in fact impose a security risk if not secured properly. It's easier just to remove them. The default webapps that are safe to remove are `ROOT`, `docs`, `examples`, `host-manager`, and `manager`. For the risk-averse, create a directory in `$SHRINE_HOME/tomcat` named something like `webapps-disabled` and move the default webapps there.
 
-You also likely will want to restrict the set of ciphers that SHRINE will use for accepting HTTPS requests. SHRINE depends on default tomcat behavior, and tomcat accepts ciphers by default that are known insecure. See https://wiki.apache.org/tomcat/Security/Ciphers for instructions. The cipher list to use depends on the version of Java that you are using, and it goes in the ciphers attribute of the SSL connector in `$SHRINE_HOME/tomcat/conf/server.xml`. The Java system property described on that page can be set in `$SHRINE_HOME/tomcat/bin/setenv.sh`. Include a line in that file with `CATALINA_OPTS="put_the_system property_here"`. You will need to restart SHRINE for these changes to take effect.
+Make the `shrine-webclient` the `ROOT` webapp (just rename the `$SHRINE_HOME/tomcat/webapps/shrine-webclient` directory `ROOT`).
+
+Make the database management system that your SHRINE is using start automatically on boot. For example, for MySQL installed using the default packages from CentOS or Red Hat, the command is `sudo chkconfig --level 2345 mysqld on`.
+
+Restrict the set of ciphers that SHRINE will use for accepting HTTPS requests. SHRINE depends on default tomcat behavior, and tomcat accepts ciphers by default that are known insecure. See https://wiki.apache.org/tomcat/Security/Ciphers for instructions. The cipher list to use depends on the version of Java that you are using, and it goes in the ciphers attribute of the SSL connector in `$SHRINE_HOME/tomcat/conf/server.xml`. The Java system property described on that page can be set in `$SHRINE_HOME/tomcat/bin/setenv.sh`. Include a line in that file with `CATALINA_OPTS="put_the_system property_here"`. You will need to restart SHRINE for these changes to take effect.
 
 The SHRINE installer does not setup the i2b2 services URL correctly for us. We get a "No route to host" exception when doing the happy SHRINE test. Analysis of SHRINE's log files (in `$SHRINE_HOME/tomcat/logs/shrine.log`) indicated that SHRINE was using an invalid URL to access our i2b2 server. To fix this, we went into `$SHRINE_HOME/tomcat/lib/shrine.conf` and edited the pmEndpoint and ontEndpoint sections at the top of the file. With a default i2b2 installation, the pmEndpoint should look like `http://<your_hostname>:9090/i2b2/services/PMService/getServices`, and your ontEndpoint should look like `http://<your_hostname>:9090/i2b2/services/OntologyService/`.
