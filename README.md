@@ -8,7 +8,7 @@ These instructions assume you have already followed the automated install instru
 
 1. Copy the `common.rc` and `shrine.rc` files that the installer placed in your home directory to `$SHRINE_HOME`.
 2. Copy the `runshrine` script to `$SHRINE_HOME`.
-2. Create a `shrine` user and `shrine` group on your server. This should be a service account with no home directory.
+2. Create a `shrine` user and `shrine` group on your server. The user account should be a service account with no home directory.
 2. Change the owner and group of your SHRINE installation to the shrine user and group: `sudo chown -R shrine:shrine $SHRINE_HOME`.
 3. Change the `HOME` variable in the shrine script to your `$SHRINE_HOME`.
 4. Copy the `shrine` script to `/etc/init.d`, and make its owner root: `sudo chown root:root /etc/init.d/shrine`.
