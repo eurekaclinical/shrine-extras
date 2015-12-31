@@ -14,7 +14,7 @@ These instructions assume you have already followed the automated install instru
 4. Change the owner and group of your SHRINE installation to the shrine user and group: `sudo chown -R shrine:shrine $SHRINE_HOME`.
 5. Change the `HOME` variable in the shrine script to your `$SHRINE_HOME`.
 6. Copy the `shrine` script to `/etc/init.d`, and make its owner root: `sudo chown root:root /etc/init.d/shrine`.
-7. You may now start SHRINE with the following command: `sudo service shrine start`. Similarly, stop SHRINE by invoking `sudo service shrine stop`. On starting SHRINE, you may see the following error: `Starting Shrine... eth0: error fetching interface information: Device not found`. This appears to be a bug in SHRINE's configuration files, but it is harmless as SHRINE still starts normally.
+7. You may now start SHRINE with the following command: `sudo service shrine start`. Similarly, stop SHRINE by invoking `sudo service shrine stop`. When starting and stopping SHRINE, you may see the following error: `Starting/Stopping Shrine... eth0: error fetching interface information: Device not found`. This appears to be a bug in SHRINE's configuration files, but it is harmless as SHRINE still starts normally.
 8. To make SHRINE start automatically, run `sudo chkconfig --level 3 shrine on`. This command makes SHRINE start automatically in runlevel 3, which is the default runlevel for Red Hat and CentOS server installations.
 
 ## Extra tips
