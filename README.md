@@ -4,7 +4,7 @@ This package contains scripts for installing SHRINE as a service on Red Hat and 
 
 ## Instructions
 
-These instructions assume you have already followed the automated install instructions on the SHRINE website. `$SHRINE_HOME` is the path to your SHRINE installation, usually `/opt/shrine`. These instructions have been tested with SHRINE version 1.19.1.
+These instructions assume you have already followed the automated install instructions on the SHRINE website. `$SHRINE_HOME` is the path to your SHRINE installation, usually `/opt/shrine`. These instructions have been tested with SHRINE version 1.19.1 on Red Hat Enterprise Linux version 6.5.
 
 1. Copy the common.rc and shrine.rc files that the installer placed in your home directory to `$SHRINE_HOME`.
 2. Copy the `runshrine` script to `$SHRINE_HOME`.
