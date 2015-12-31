@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# chkconfig: - 58 74
+# description: Runs shrine application
+#
+# /etc/rc.d/init.d/shrine
+# Author: Jim Kinney <jkinney@emory.edu>
+# (C) 2015 Emory University. All rights reserved.
+#
+### BEGIN INIT INFO
+# Provides:             shrine
+# Required-Start:
+# Required-Stop:
+# Default-Start: 3
+# Default-Stop: 0 6
+# Description: Shrine
+# Short-Description: Shrine
+### END INIT INFO
+SHRINE_USER=shrine
+RETVAL=0
+# source function library
+. /etc/rc.d/init.d/functions
+
+# See how we were called.
+case "$1" in
+  start)
+        [ $UID -eq 0 ] || exit 4
+        echo -n "Starting Shrine... "
+          HOME=/opt/shrine su -l ${SHRINE_USER} -c "~/runshrine start"
+        [ $? -eq 0 ] || RETVAL=1
+        echo
+        ;;
+
+  status)
+        [ -f $PIDFILE ] || RETVAL=3
+        ;;
+
+  stop)
+        [ $UID -eq 0 ] || exit 4
+        echo -n "Stopping Shrine... "
+          HOME=/opt/shrine su - shrine -c "~/runshrine stop"
+        [ $? -eq 0 ] || RETVAL=1
+        echo
+        ;;
+
+  restart)
+        [ $UID -eq 0 ] || exit 4
+        echo -n "Restarting Shrine... "
+        HOME=/opt/shrine su - shrine -c "~/runshrine stop"
+        HOME=/opt/shrine su - shrine -c "~/runshrine start"
+        [ $? -eq 0 ] || RETVAL=1
+        echo
+        ;;
+
+  *)
+        echo "Usage: shrine {start|stop|restart}"
+        RETVAL=2
+esac
+
+exit ${RETVAL}

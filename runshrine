@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# This is used to start/stop shrine from init
+# Set all required environement variable first
+
+HOME=/opt/shrine
+source ~/shrine.rc
+
+# run start|stop as requested
+
+ACTION=$1
+
+case $ACTION in
+        start)  ${SHRINE_TOMCAT_HOME}/bin/startup.sh;;
+        stop)   ${SHRINE_TOMCAT_HOME}/bin/shutdown.sh;;
+        *)      echo "Unknown request";;
+esac
