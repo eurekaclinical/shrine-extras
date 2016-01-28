@@ -9,9 +9,9 @@ Below the instructions are some extra tips we have found useful when deploying S
 These instructions assume you have already followed the automated install instructions on the SHRINE website and your user account on your SHRINE server has sudo access. `$SHRINE_HOME` is the path to your SHRINE installation, usually `/opt/shrine`. These instructions have been tested with SHRINE version 1.19.1 on Red Hat Enterprise Linux version 6.5.
 
 1. Move the `common.rc` and `shrine.rc` files that the SHRINE installer placed in your home directory to `$SHRINE_HOME`.
-2. Copy the `runshrine` script to `$SHRINE_HOME`.
-3. Create a `shrine` user and `shrine` group on your server. The user account should be a service account with no home directory.
-4. Change the owner and group of your SHRINE installation to the shrine user and group: `sudo chown -R shrine:shrine $SHRINE_HOME`.
+2. Copy the `runshrine` script to `$SHRINE_HOME`. Make sure this script has execute permissions. 
+3. Create a `shrine` user and `shrine` group on your server. The user account should be a service account with no home directory: `sudo useradd -M shrine`. The user is assigned $SHRINE_HOME as the home directory: `sudo usermod -d $SHRINE_HOME shrine’ 
+4. Change the owner and group of your SHRINE installation to the shrine user and group: `sudo chown -R shrine:shrine $SHRINE_HOME`. If you run shrine directly through tomcat as a user other than shrine after this point, there might be new files created(e.g.:log files) that shrine would not own. You need to run the chown command again. 
 5. Change the `HOME` variable in the shrine script to your `$SHRINE_HOME`.
 6. Copy the `shrine` script to `/etc/init.d`, and make its owner root: `sudo chown root:root /etc/init.d/shrine`.
 7. You may now start SHRINE with the following command: `sudo service shrine start`. Similarly, stop SHRINE by invoking `sudo service shrine stop`. When starting and stopping SHRINE, you may see the following error: `Starting/Stopping Shrine... eth0: error fetching interface information: Device not found`. This appears to be a bug in SHRINE's configuration files, but it is harmless as SHRINE still starts normally.
@@ -19,7 +19,7 @@ These instructions assume you have already followed the automated install instru
 
 ## Extra tips
 
-The SHRINE installation installs all of the default webapps that come with tomcat. These are not needed and can impose a security risk if not secured properly. It's easier just to remove them. The default webapps that are safe to remove are `ROOT`, `docs`, `examples`, `host-manager`, and `manager`. For the risk-averse, create a directory in `$SHRINE_HOME/tomcat` named something like `webapps-disabled` and move the default webapps there. Shutdown SHRINE while making these changes.
+The SHRINE installation installs all of the default webapps that come with tomcat. These are not needed and can impose a security risk if not secured properly. It's easier just to remove them. The default webapps that are safe to remove are `ROOT`, `docs`, `examples`, `host-manager`, and `manager`. For the risk-averse, create a directory in `$SHRINE_HOME/tomcat` named something like `webapps-disabled` and move the default webapps there. Shutdown SHRINE while making these changes.Also remove host-manager.xml and manager.xml from conf/Catalina/host directory. To be safe, create a directory within ‘webapps-disabled’ named ‘disabled-conf’ and move the two .xml files there.
 
 Make the `shrine-webclient` the `ROOT` webapp (just rename the `$SHRINE_HOME/tomcat/webapps/shrine-webclient` directory `ROOT`). Shutdown SHRINE while making this change.
 
