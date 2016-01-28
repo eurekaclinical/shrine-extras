@@ -26,7 +26,7 @@ case "$1" in
   start)
         [ $UID -eq 0 ] || exit 4
         echo -n "Starting Shrine... "
-          HOME=/opt/shrine su -l ${SHRINE_USER} -c "~/runshrine start"
+          su -l ${SHRINE_USER} -c "~/runshrine start"
         [ $? -eq 0 ] || RETVAL=1
         echo
         ;;
@@ -38,7 +38,7 @@ case "$1" in
   stop)
         [ $UID -eq 0 ] || exit 4
         echo -n "Stopping Shrine... "
-          HOME=/opt/shrine su - shrine -c "~/runshrine stop"
+          su -l ${SHRINE_USER} -c "~/runshrine stop"
         [ $? -eq 0 ] || RETVAL=1
         echo
         ;;
@@ -46,8 +46,8 @@ case "$1" in
   restart)
         [ $UID -eq 0 ] || exit 4
         echo -n "Restarting Shrine... "
-        HOME=/opt/shrine su - shrine -c "~/runshrine stop"
-        HOME=/opt/shrine su - shrine -c "~/runshrine start"
+         su -l ${SHRINE_USER} -c "~/runshrine stop"
+         su -l ${SHRINE_USER} -c "~/runshrine start"
         [ $? -eq 0 ] || RETVAL=1
         echo
         ;;
