@@ -1,13 +1,12 @@
 # shrine-extras
 Atlanta Clinical and Translational Science Institute, Emory University, Atlanta, GA
 
-## Overview
+## What is it?
 This package contains scripts for installing SHRINE as a service on Red Hat and CentOS Linux systems. These instructions will make your SHRINE installation independent of the account of the user who installed SHRINE, and they will make SHRINE start automatically on boot.
 
 Below the instructions are some extra tips we have found useful when deploying SHRINE.
 
 ## Instructions
-
 These instructions assume you have already followed the automated install instructions on the SHRINE website and your user account on your SHRINE server has sudo access. `$SHRINE_HOME` is the path to your SHRINE installation, usually `/opt/shrine`. These instructions have been tested with SHRINE version 1.19.1 on Red Hat Enterprise Linux version 6.5.
 
 1. Move the `common.rc` and `shrine.rc` files that the SHRINE installer placed in your home directory to `$SHRINE_HOME`.
@@ -20,7 +19,6 @@ These instructions assume you have already followed the automated install instru
 8. To make SHRINE start automatically on boot, run `sudo chkconfig shrine on`. This command makes SHRINE start automatically in runlevel 3, which is the default runlevel for Red Hat and CentOS server installations.
 
 ## Extra tips
-
 ### Securing Tomcat
 The SHRINE installation installs all of the default webapps that come with tomcat. These are not needed and can impose a security risk if not secured properly. It's easier just to remove them. The default webapps that are safe to remove are `ROOT`, `docs`, `examples`, `host-manager`, and `manager`. For the risk-averse, create a directory in `$SHRINE_HOME/tomcat` named something like `webapps-disabled` and move the default webapps there. Shutdown SHRINE while making these changes.Also remove host-manager.xml and manager.xml from conf/Catalina/host directory. To be safe, create a directory within ‘webapps-disabled’ named ‘disabled-conf’ and move the two .xml files there.
 
