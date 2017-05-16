@@ -1,5 +1,7 @@
 # shrine-extras
+Atlanta Clinical and Translational Science Institute, Emory University, Atlanta, GA
 
+## Overview
 This package contains scripts for installing SHRINE as a service on Red Hat and CentOS Linux systems. These instructions will make your SHRINE installation independent of the account of the user who installed SHRINE, and they will make SHRINE start automatically on boot.
 
 Below the instructions are some extra tips we have found useful when deploying SHRINE.
