@@ -36,15 +36,16 @@ The SHRINE installer does not setup the i2b2 services URL correctly for us. We g
 ### Certificate exchange with a SHRINE hub
 If you are joining a SHRINE hub, here are instructions for the certificate exchange: https://open.med.harvard.edu/wiki/plugins/servlet/mobile#content/view/23462012
 
-Here is our adaptation of that process. It assumes that SHRINE is located at `/opt/shrine2`, and your Java installation is located at `/opt/java`.
-1) Ensure the keystore at /opt/shrine2/shrine.keystore is empty, or delete it.
-1) In your own account on the SHRINE node, run `source /opt/shrine2/shrine.rc`.
-2) Create a private key (also creates the keystore, if it does not already exist):
+Here is our adaptation of that process:
+1) Ensure the keystore at $SHRINE_HOME/shrine.keystore is empty, or delete it.
+2) In your own account on the SHRINE node, run `source $SHRINE_HOME/shrine.rc`.
+3) Set JAVA_HOME to your Java installation, and set SHRINE_HOME to the root of your SHRINE installation.
+4) Create a private key (also creates the keystore, if it does not already exist):
 ```
-sudo /opt/java/bin/keytool -genkeypair -keysize 2048 -alias $KEYSTORE_ALIAS -dname "CN=$KEYSTORE_ALIAS, OU=$KEYSTORE_HUMAN, O=SHRINE Network, L=$KEYSTORE_CITY, S=$KEYSTORE_STATE, C=$KEYSTORE_COUNTRY" -keyalg RSA -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE -validity 7300
+sudo $JAVA_HOME/bin/keytool -genkeypair -keysize 2048 -alias $KEYSTORE_ALIAS -dname "CN=$KEYSTORE_ALIAS, OU=$KEYSTORE_HUMAN, O=SHRINE Network, L=$KEYSTORE_CITY, S=$KEYSTORE_STATE, C=$KEYSTORE_COUNTRY" -keyalg RSA -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE -validity 7300
 ```
-3) Create a certificate signing request:
+5) Create a certificate signing request:
 ```
-/opt/java/bin/keytool -certreq -alias $KEYSTORE_ALIAS -keyalg RSA -file shrine-client.csr -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE 
+$JAVA_HOME/bin/keytool -certreq -alias $KEYSTORE_ALIAS -keyalg RSA -file shrine-client.csr -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE 
 ```
-4) Send the resulting file in your working directory, `shrine-client.csr`, to the hub.
+6) Send the resulting file in your working directory, `shrine-client.csr`, to the hub.
