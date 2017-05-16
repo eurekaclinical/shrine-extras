@@ -36,10 +36,10 @@ The SHRINE installer does not setup the i2b2 services URL correctly for us. We g
 ### Certificate exchange with a SHRINE hub
 If you are joining a SHRINE hub, here are instructions for the certificate exchange: https://open.med.harvard.edu/wiki/plugins/servlet/mobile#content/view/23462012
 
-Here is our process. It assumes that SHRINE is located at `/opt/shrine2`, and your Java installation is located at `/opt/java`.
+Here is our adaptation of that process. It assumes that SHRINE is located at `/opt/shrine2`, and your Java installation is located at `/opt/java`.
 1) Ensure the keystore at /opt/shrine2/shrine.keystore is empty, or delete it.
 1) In your own account on the SHRINE node, run `source /opt/shrine2/shrine.rc`.
-2) To create a private key, execute (also creates the keystore, if it does not already exist):
+2) Create a private key (also creates the keystore, if it does not already exist):
 ```
 sudo /opt/java/bin/keytool -genkeypair -keysize 2048 -alias $KEYSTORE_ALIAS -dname "CN=$KEYSTORE_ALIAS, OU=$KEYSTORE_HUMAN, O=SHRINE Network, L=$KEYSTORE_CITY, S=$KEYSTORE_STATE, C=$KEYSTORE_COUNTRY" -keyalg RSA -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE -validity 7300
 ```
@@ -47,4 +47,4 @@ sudo /opt/java/bin/keytool -genkeypair -keysize 2048 -alias $KEYSTORE_ALIAS -dna
 ```
 /opt/java/bin/keytool -certreq -alias $KEYSTORE_ALIAS -keyalg RSA -file shrine-client.csr -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE 
 ```
-Step 3 creates a `shrine-client.csr` file in your working directory. Send this file to the hub.
+4) Send the resulting file in your working directory, `shrine-client.csr`, to the hub.
