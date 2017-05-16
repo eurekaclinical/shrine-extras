@@ -19,14 +19,32 @@ These instructions assume you have already followed the automated install instru
 
 ## Extra tips
 
+### Securing Tomcat
 The SHRINE installation installs all of the default webapps that come with tomcat. These are not needed and can impose a security risk if not secured properly. It's easier just to remove them. The default webapps that are safe to remove are `ROOT`, `docs`, `examples`, `host-manager`, and `manager`. For the risk-averse, create a directory in `$SHRINE_HOME/tomcat` named something like `webapps-disabled` and move the default webapps there. Shutdown SHRINE while making these changes.Also remove host-manager.xml and manager.xml from conf/Catalina/host directory. To be safe, create a directory within ‘webapps-disabled’ named ‘disabled-conf’ and move the two .xml files there.
-
-Make the `shrine-webclient` the `ROOT` webapp (just rename the `$SHRINE_HOME/tomcat/webapps/shrine-webclient` directory `ROOT`). Shutdown SHRINE while making this change.
-
-Make the database management system that your SHRINE is using start automatically on boot. For example, for MySQL installed using the default packages from CentOS or Red Hat, the command is `sudo chkconfig --level 2345 mysqld on`.
 
 Restrict the set of ciphers that SHRINE will use for accepting HTTPS requests. SHRINE depends on default tomcat behavior, and tomcat accepts ciphers by default that are known insecure. See https://wiki.apache.org/tomcat/Security/Ciphers for instructions. The cipher list to use depends on the version of Java that you are using, and it goes in the ciphers attribute of the SSL connector in `$SHRINE_HOME/tomcat/conf/server.xml`. The Java system property described on that page can be set in `$SHRINE_HOME/tomcat/bin/setenv.sh`. Include a line in that file with `CATALINA_OPTS="put_the_system property_here"`. You will need to restart SHRINE for these changes to take effect.
 
+### Making SHRINE's webclient the ROOT webapp
+Make the `shrine-webclient` the `ROOT` webapp (just rename the `$SHRINE_HOME/tomcat/webapps/shrine-webclient` directory `ROOT`). Shutdown SHRINE while making this change.
+
+### Starting the SHRINE database on boot
+Make the database management system that your SHRINE is using start automatically on boot. For example, for MySQL installed using the default packages from CentOS or Red Hat, the command is `sudo chkconfig --level 2345 mysqld on`.
+
+### "No route to host" error troubleshooting
 The SHRINE installer does not setup the i2b2 services URL correctly for us. We get a "No route to host" exception when doing the happy SHRINE test. Analysis of SHRINE's log files (in `$SHRINE_HOME/tomcat/logs/shrine.log`) indicated that SHRINE was using an invalid URL to access our i2b2 server. To fix this, we went into `$SHRINE_HOME/tomcat/lib/shrine.conf` and edited the pmEndpoint and ontEndpoint sections at the top of the file. With a default i2b2 installation, the pmEndpoint should look like `http://<your_hostname>:9090/i2b2/services/PMService/getServices`, and your ontEndpoint should look like `http://<your_hostname>:9090/i2b2/services/OntologyService/`.
 
+### Certificate exchange with a SHRINE hub
 If you are joining a SHRINE hub, here are instructions for the certificate exchange: https://open.med.harvard.edu/wiki/plugins/servlet/mobile#content/view/23462012
+
+Here is our process. It assumes that SHRINE is located at `/opt/shrine2`, and your Java installation is located at `/opt/java`.
+1) Ensure the keystore at /opt/shrine2/shrine.keystore is empty, or delete it.
+1) In your own account on the SHRINE node, run `source /opt/shrine2/shrine.rc`.
+2) To create a private key, execute (also creates the keystore, if it does not already exist):
+```
+sudo /opt/java/bin/keytool -genkeypair -keysize 2048 -alias $KEYSTORE_ALIAS -dname "CN=$KEYSTORE_ALIAS, OU=$KEYSTORE_HUMAN, O=SHRINE Network, L=$KEYSTORE_CITY, S=$KEYSTORE_STATE, C=$KEYSTORE_COUNTRY" -keyalg RSA -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE -validity 7300
+```
+3) Create a certificate signing request:
+```
+/opt/java/bin/keytool -certreq -alias $KEYSTORE_ALIAS -keyalg RSA -file shrine-client.csr -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE 
+```
+Step 3 creates a `shrine-client.csr` file in your working directory. Send this file to the hub.
