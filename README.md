@@ -49,3 +49,10 @@ sudo $JAVA_HOME/bin/keytool -genkeypair -keysize 2048 -alias $KEYSTORE_ALIAS -dn
 $JAVA_HOME/bin/keytool -certreq -alias $KEYSTORE_ALIAS -keyalg RSA -file shrine-client.csr -keypass $KEYSTORE_PASSWORD -storepass $KEYSTORE_PASSWORD -keystore $KEYSTORE_FILE 
 ```
 6) Send the resulting file in your working directory, `shrine-client.csr`, to the hub.
+7) The hub will send you back three certificates named something like: `shrine-hub-ca.pem`, `shrine-hub-https.pem`, and `shrine-hub-signed-cert.pem`.
+8) Import `shrine-hub-ca.pem` with the following command (make sure you re-source the `shrine.rc` if needed):
+```
+sudo $JAVA_HOME/bin/keytool -import -v -alias shrine-hub-ca -file shrine-hub-ca.pem -keystore $KEYSTORE_FILE -storepass $KEYSTORE_PASSWORD
+```
+When asked to trust the certificate, type `yes` and hit return.
+9) 
