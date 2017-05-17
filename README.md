@@ -55,4 +55,8 @@ $JAVA_HOME/bin/keytool -certreq -alias $KEYSTORE_ALIAS -keyalg RSA -file shrine-
 sudo $JAVA_HOME/bin/keytool -import -v -alias shrine-hub-ca -file shrine-hub-ca.pem -keystore $KEYSTORE_FILE -storepass $KEYSTORE_PASSWORD
 ```
 When asked to trust the certificate, type `yes` and hit return.
-9) 
+
+9) Import `shrine-hub-https.pem` with the following command:
+```
+sudo $JAVA_HOME/bin/keytool -import -v -alias shrine-hub-https -file shrine-hub-https.pem -keystore $KEYSTORE_FILE -storepass $KEYSTORE_PASSWORD
+```
